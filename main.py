@@ -16,10 +16,12 @@ def main():
         for ticker in list_ticker:
             info_about_ticker = ticker_data(ticker)
             data_list.append(info_about_ticker)
-
+        # тут можно изменить название файла, при замене название также необходимо сменить в модуле window.py
         save_result(data_list, 'биржевые данные.xlsx')
 
         time.sleep(30)
+
+
 
 
 # Создаем пул потоков с максимальным количеством потоков равным 3

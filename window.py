@@ -60,10 +60,11 @@ import concurrent.futures
 import time
 
 
-def update_table():
+def update_table(file_name_):
     global tree
     while True:
-        wb = load_workbook('C:\\Users\Administrator\PycharmProjects\My_Broker\биржевые данные.xlsx')
+        # тут можно изменить название файла, при замене название также необходимо сменить в модуле main.py
+        wb = load_workbook('биржевые данные.xlsx')
         sheet = wb.active
         rows = []
         for row in sheet.iter_rows(values_only=True):

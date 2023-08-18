@@ -11,9 +11,9 @@ def emulation():
         # чтобы получить доступ к портфелю, сперва нужно залогиниться на сайте
         page.goto('https://ru.investing.com/login/')
         # в аргументе функции указываем почту
-        page.fill('input#loginFormUser_email', 'sib_94@vk.com')
+        page.fill('input#loginFormUser_email', 'your login')
         # в аргументе функции указываем пароль
-        page.fill('input#loginForm_password', '134grabl')
+        page.fill('input#loginForm_password', 'your password')
         # если при попытке входа высвечиватся диалоговое меню, строку кода ниже разкоментировать
         page.click('button[id=onetrust-accept-btn-handler]')
         page.click('a[onclick="loginFunctions.submitLogin();"][class="newButton orange"]')
@@ -26,8 +26,5 @@ def emulation():
 
         return ticker_list
 
-
-# html = emulation()
-# print(html)
 
 
