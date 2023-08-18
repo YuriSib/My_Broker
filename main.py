@@ -22,7 +22,8 @@ def main():
         time.sleep(30)
 
 
-
+# if __name__ == "__main__":
+#     main()
 
 # Создаем пул потоков с максимальным количеством потоков равным 3
 with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:

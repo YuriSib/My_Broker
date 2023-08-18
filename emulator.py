@@ -11,11 +11,11 @@ def emulation():
         # чтобы получить доступ к портфелю, сперва нужно залогиниться на сайте
         page.goto('https://ru.investing.com/login/')
         # в аргументе функции указываем почту
-        page.fill('input#loginFormUser_email', 'your login')
+        page.fill('input#loginFormUser_email', 'Логин')
         # в аргументе функции указываем пароль
-        page.fill('input#loginForm_password', 'your password')
+        page.fill('input#loginForm_password', 'Пароль')
         # если при попытке входа высвечиватся диалоговое меню, строку кода ниже разкоментировать
-        page.click('button[id=onetrust-accept-btn-handler]')
+        # page.click('button[id=onetrust-accept-btn-handler]')
         page.click('a[onclick="loginFunctions.submitLogin();"][class="newButton orange"]')
         page.goto('https://ru.investing.com/portfolio/?portfolioID=ZGVjNTVmYzpjN29qYTE3NQ%3D%3D', timeout=60000)
         html_ = page.content()

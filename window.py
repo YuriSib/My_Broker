@@ -56,11 +56,10 @@ import tkinter as tk
 from tkinter import ttk
 from openpyxl import load_workbook
 import threading
-import concurrent.futures
 import time
 
 
-def update_table(file_name_):
+def update_table():
     global tree
     while True:
         # тут можно изменить название файла, при замене название также необходимо сменить в модуле main.py
