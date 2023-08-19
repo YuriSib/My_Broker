@@ -17,5 +17,14 @@ def ticker_data(soup_obj):
     return data_ticker_
 
 
+def link_scrapper(ticker_list):
+    link_list = []
+    for ticker in ticker_list:
+        link = ticker.find('span', class_='aqPopupWrapper js-hover-me-wrapper').find('a')['href']
+        link_list.append(link)
+
+    return link_list
+
+
 
 
