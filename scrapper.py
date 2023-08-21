@@ -26,5 +26,45 @@ def link_scrapper(ticker_list):
     return link_list
 
 
+def history_list(html):
+    soup = BeautifulSoup(html, 'lxml')
+    history = soup.find_all('tr', {'data-test': 'historical-data-table-row'})
+
+    return history
 
 
+def history_scrapper(html):
+    # soup = BeautifulSoup
+    # time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
+    # price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
+    # open_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[0].get_text(strip=True)
+    # max_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[1].get_text(strip=True)
+    # min_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[2].get_text(strip=True)
+    # amount = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[3].get_text(
+    #     strip=True)
+    try:
+        time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
+    except Exception:
+        time_ = 'Не удалось извлечь значение!'
+    try:
+        price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
+    except Exception:
+        price = 'Не удалось извлечь значение!'
+    try:
+        open_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[0].get_text(strip=True)
+    except Exception:
+        open_ = 'Не удалось извлечь значение!'
+    try:
+        max_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[1].get_text(strip=True)
+    except Exception:
+        max_ = 'Не удалось извлечь значение!'
+    try:
+        min_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[2].get_text(strip=True)
+    except Exception:
+        min_ = 'Не удалось извлечь значение!'
+    try:
+        amount = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[3].get_text(strip=True)
+    except Exception:
+        amount = 'Не удалось извлечь значение!'
+
+    return time_, price, open_, max_, min_, amount

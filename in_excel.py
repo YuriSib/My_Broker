@@ -14,5 +14,3 @@ def save_result(list_, file_name):
         sheet.append(row_values)
     # Сохраняем Excel-файл
     workbook.save(file_name)
-
-
