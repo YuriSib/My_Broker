@@ -28,7 +28,7 @@ def emulation_entry():
         # в аргументе функции указываем почту
         page.fill('input#loginFormUser_email', 'sib_94@vk.com')
         # в аргументе функции указываем пароль
-        page.fill('input#loginForm_password', '134grabl')
+        page.fill('input#loginForm_password', 'пароль')
 
         html_login = page.content()
         soup_login = BeautifulSoup(html_login, 'lxml')
