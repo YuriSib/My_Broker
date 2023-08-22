@@ -18,31 +18,28 @@ def timing_decorator(func):
 
 
 @timing_decorator
-def emulation_entry():
+def emulation_for_ticker():
     with sync_playwright() as p:
         # для отображения браузера-эмулятора в аргументе функции прописать - (headless=False, slow_mo=50)
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        # чтобы получить доступ к портфелю, сперва нужно залогиниться на сайте
-        page.goto('https://ru.investing.com/login/', timeout=60000)
-        # в аргументе функции указываем почту
-        page.fill('input#loginFormUser_email', 'sib_94@vk.com')
-        # в аргументе функции указываем пароль
-        page.fill('input#loginForm_password', 'пароль')
 
-        html_login = page.content()
-        soup_login = BeautifulSoup(html_login, 'lxml')
-        privacy_window = soup_login.find('div', class_='ot-sdk-container')
+        ticker_list = []
 
-        if privacy_window:
-            page.click('button[id=onetrust-accept-btn-handler]')
-        page.click('a[onclick="loginFunctions.submitLogin();"][class="newButton orange"]')
+        for num in range(1, 8):
+            page.goto(f'https://ru.investing.com/stock-screener/?sp=country::56|sector::a|industry::a|'
+                      f'equityType::a|exchange::40%3EviewData.symbol;{num}', timeout=60000)
 
-        page.goto('https://ru.investing.com/portfolio/?portfolioID=ZGVjNTVmYzpjN29qYTE3NQ%3D%3D', timeout=60000)
-        html_ = page.content()
-        soup = BeautifulSoup(html_, 'lxml')
-        ticker_block = soup.find('tbody', class_='ui-sortable')
-        ticker_list = ticker_block.find_all('tr', {'data-pair-exchange-id': '40'})
+            page.wait_for_selector('#resultsTable')
+            html = page.content()
+            if html is not None:
+                soup = BeautifulSoup(html, 'lxml')
+                table = soup.find('table', {'id': 'resultsTable'}).find('tbody').find_all('tr')
+                ticker_list.extend(table)
+            else:
+                continue
+
+
         browser.close()
 
         return ticker_list
@@ -52,7 +49,7 @@ def emulation_entry():
 def emulation_for_history(url):
     with sync_playwright() as p:
         # для отображения браузера-эмулятора в аргументе функции прописать - (headless=False, slow_mo=50)
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto(url, timeout=60000)
         html_login = page.content()
@@ -67,16 +64,13 @@ def emulation_for_history(url):
             page.keyboard.press("ArrowUp")
         page.keyboard.press("Enter")
         page.click('button.inv-button.HistoryDatePicker_apply-button__Oj7Hu')
-        time.sleep(10)
-        page.mouse.wheel(delta_x=0, delta_y=1000)
-        time.sleep(10)
+        page.wait_for_selector('#resultsTable')
         html_ = page.content()
         browser.close()
 
         return html_
 
 
-# html = emulation_for_history('https://ru.investing.com/equities/sberbank_rts-historical-data')
-# print(history_scrapper(html))
+# emulation_for_ticker()
 
 
