@@ -29,5 +29,6 @@ if __name__ == "__main__":
     # code_thread.start()
     # code_thread2 = threading.Thread(target=update_table)
     # code_thread2.start()
-    main()
+    while True:
+        main()
 

@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 
 
-def ticker_scrapper(html):
+def ticker_scrapper(soup):
     data_ticker_ = []
-    soup = BeautifulSoup(html, 'lxml')
     name = soup.find('td', {'data-column-name': 'name_trans'}).get_text(strip=True)
     ticker_ = soup.find('td', {'data-column-name': 'viewData.symbol'}).get_text(strip=True)
     price = soup.find('td', {'data-column-name': 'last'}).get_text(strip=True)

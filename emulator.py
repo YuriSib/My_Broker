@@ -21,26 +21,32 @@ def timing_decorator(func):
 def emulation_for_ticker():
     with sync_playwright() as p:
         # для отображения браузера-эмулятора в аргументе функции прописать - (headless=False, slow_mo=50)
-        browser = p.chromium.launch(headless=True)
+        browser = p.firefox.launch(headless=True)
         page = browser.new_page()
 
         ticker_list = []
 
         for num in range(1, 8):
-            page.goto(f'https://ru.investing.com/stock-screener/?sp=country::56|sector::a|industry::a|'
-                      f'equityType::a|exchange::40%3EviewData.symbol;{num}', timeout=60000)
-
-            page.wait_for_selector('#resultsTable')
-            html = page.content()
-            if html is not None:
-                soup = BeautifulSoup(html, 'lxml')
-                table = soup.find('table', {'id': 'resultsTable'}).find('tbody').find_all('tr')
-                ticker_list.extend(table)
-            else:
-                continue
-
+            url = f'https://ru.investing.com/stock-screener/?sp=country::56|sector::a|industry::a|equityType::a|' \
+                  f'exchange::40%3EviewData.symbol;{num}'
+            page.goto(url, timeout=60000)
+            html_login = page.content()
+            soup_login = BeautifulSoup(html_login, 'lxml')
+            privacy_window = soup_login.find('div', class_='ot-sdk-container')
+            if privacy_window:
+                page.click('button[id=onetrust-accept-btn-handler]')
+            while True:
+                html = page.content()
+                if html is None:
+                    continue
+                else:
+                    break
+            soup = BeautifulSoup(html, 'lxml')
+            table = soup.find('table', {'id': 'resultsTable'}).find('tbody').find_all('tr')
+            ticker_list.extend(table)
 
         browser.close()
+        print(f'Собрано {len(ticker_list)} тикеров')
 
         return ticker_list
 
@@ -49,7 +55,7 @@ def emulation_for_ticker():
 def emulation_for_history(url):
     with sync_playwright() as p:
         # для отображения браузера-эмулятора в аргументе функции прописать - (headless=False, slow_mo=50)
-        browser = p.chromium.launch(headless=True)
+        browser = p.firefox.launch(headless=True)
         page = browser.new_page()
         page.goto(url, timeout=60000)
         html_login = page.content()
@@ -57,15 +63,22 @@ def emulation_for_history(url):
         privacy_window = soup_login.find('div', class_='ot-sdk-container')
         if privacy_window:
             page.click('button[id=onetrust-accept-btn-handler]')
-        page.click('div[class="DatePickerWrapper_input-text__HAN0Z DatePickerWrapper_center__BYe4Q"]')
-        page.click('div.NativeDateInput_root__lZxBl')
-        # Устанавливаем количество недель, на которое будет расширена выгрузка исторического периода
+        history_link = soup_login.find_all('li', class_='mr-6 last:mr-0 text-xs leading-4 cursor-pointer '
+                                                        'py-3.5 text-[#5b616e]')[2].find('a')['href']
+        history_link = 'https://ru.investing.com/' + history_link
+        page.goto(history_link, timeout=60000)
+        page.click('div[class="DatePickerWrapper_input-text__HAN0Z DatePickerWrapper_center__BYe4Q"]', timeout=60000)
+        page.click('div.NativeDateInput_root__lZxBl', timeout=60000)
+
         for repeat in range(49):
             page.keyboard.press("ArrowUp")
+
         page.keyboard.press("Enter")
         page.click('button.inv-button.HistoryDatePicker_apply-button__Oj7Hu')
-        page.wait_for_selector('#resultsTable')
         html_ = page.content()
+        soup = BeautifulSoup(html_, 'lxml')
+        time.sleep(10)
+        # count = len(soup.find_all('tr', class_='datatable_row__Hk3IV'))
         browser.close()
 
         return html_

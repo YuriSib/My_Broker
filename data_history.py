@@ -32,26 +32,31 @@ def historical_tables():
     df = pd.read_excel('исторические данные/Список тикеров.xlsx')
     column_values_list = df["Ссылка на тикер"].tolist()
 
-    for link in link_list:
-        if link is not column_values_list:
-            link = f'https://ru.investing.com{link}-historical-data'
-            history_html = emulation_for_history(link)
-            html_list = history_list(history_html)
+    for part_link in link_list:
+        if part_link is not column_values_list:
+            link = f'https://ru.investing.com{part_link}'
+            try:
+                history_html = emulation_for_history(link)
 
-            soup = BeautifulSoup(history_html, 'lxml')
-            name = soup.find('h2', class_='text-lg font-semibold').get_text(strip=True)
-            list_name.append((name, link))
-            file_name = f'исторические данные/{name}.xlsx'
+                html_list = history_list(history_html)
 
-            workbook = openpyxl.Workbook()
-            sheet = workbook.active
-            sheet.append(['Дата', 'Цена закрытия', 'Цена открытия', 'Максимальная цена', 'Минимальная цена', 'Объем торгов'])
-            for html in html_list:
-                sheet.append(history_scrapper(html))
-            workbook.save(file_name)
-            print(len(html_list))
+                soup = BeautifulSoup(history_html, 'lxml')
+                name = soup.find('h2', class_='text-lg font-semibold').get_text(strip=True)
+                list_name.append((name, link))
+                file_name = f'исторические данные/{name}.xlsx'
 
-    table_check(link_list, 'исторические данные/Список тикеров.xlsx')
+                workbook = openpyxl.Workbook()
+                sheet = workbook.active
+                sheet.append(['Дата', 'Цена закрытия', 'Цена открытия', 'Максимальная цена', 'Минимальная цена', 'Объем торгов'])
+                for html in html_list:
+                    sheet.append(history_scrapper(html))
+                workbook.save(file_name)
+                print(len(html_list))
+            except Exception:
+                print('Не удалось собрать исторические данные по ссылке:', link)
+        table_check([link], 'исторические данные/Список тикеров.xlsx')
+
+    # table_check(link_list, 'исторические данные/Список тикеров.xlsx')
 
 
 historical_tables()
