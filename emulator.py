@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
 import time
+import pickle
 
 from playwright.sync_api import sync_playwright
+
 
 from scrapper import history_scrapper
 
@@ -55,7 +57,7 @@ def emulation_for_ticker():
 def emulation_for_history(url):
     with sync_playwright() as p:
         # для отображения браузера-эмулятора в аргументе функции прописать - (headless=False, slow_mo=50)
-        browser = p.firefox.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         page = browser.new_page()
         page.goto(url, timeout=60000)
         html_login = page.content()
@@ -63,27 +65,39 @@ def emulation_for_history(url):
         privacy_window = soup_login.find('div', class_='ot-sdk-container')
         if privacy_window:
             page.click('button[id=onetrust-accept-btn-handler]')
-        history_link = soup_login.find_all('li', class_='mr-6 last:mr-0 text-xs leading-4 cursor-pointer '
-                                                        'py-3.5 text-[#5b616e]')[2].find('a')['href']
-        history_link = 'https://ru.investing.com/' + history_link
-        page.goto(history_link, timeout=60000)
-        page.click('div[class="DatePickerWrapper_input-text__HAN0Z DatePickerWrapper_center__BYe4Q"]', timeout=60000)
-        page.click('div.NativeDateInput_root__lZxBl', timeout=60000)
+        history_link = soup_login.find_all('li', class_='mr-6 last:mr-0 text-xs leading-4 cursor-pointer py-3.5 text-[#5b616e]')[2].find('a')['href']
+        history_link = 'https://ru.investing.com' + history_link
 
-        for repeat in range(49):
-            page.keyboard.press("ArrowUp")
+        while True:
+            page.goto(history_link, timeout=60000)
+            page.click('div[class="DatePickerWrapper_input-text__HAN0Z DatePickerWrapper_center__BYe4Q"]', timeout=60000)
+            page.click('div[class="NativeDateInput_root__lZxBl"]', timeout=60000)
+            time.sleep(9)
 
-        page.keyboard.press("Enter")
-        page.click('button.inv-button.HistoryDatePicker_apply-button__Oj7Hu')
-        html_ = page.content()
-        soup = BeautifulSoup(html_, 'lxml')
-        time.sleep(10)
-        # count = len(soup.find_all('tr', class_='datatable_row__Hk3IV'))
+            for repeat in range(49):
+                page.keyboard.press("ArrowUp")
+
+            time.sleep(9)
+            page.keyboard.press("Enter")
+            time.sleep(9)
+            page.click('button.inv-button.HistoryDatePicker_apply-button__Oj7Hu')
+            time.sleep(9)
+            html_ = page.content()
+            soup = BeautifulSoup(html_, 'lxml')
+            html_list = soup.find_all('tr', {'data-test': 'historical-data-table-row'})
+            print(len(html_list))
+            if len(html_list) > 200:
+                break
+
         browser.close()
 
-        return html_
+        history_data = []
+        for html in html_list:
+            history_data.append(history_scrapper(html))
+
+        return history_data
 
 
-# emulation_for_ticker()
+# emulation_for_history('https://ru.investing.com/equities/amerisourcebergn')
 
 
