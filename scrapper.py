@@ -23,11 +23,15 @@ def ticker_scrapper(soup):
 
 def link_scrapper(ticker_list):
     link_list = []
+    ticker_name_list = []
     for ticker in ticker_list:
+        name = ticker.find('td', {'data-column-name': 'viewData.symbol'}).get_text(strip=True)
+        ticker_name_list.append(name)
+
         link = ticker.find('td', {'data-column-name': 'name_trans'}).find('a')['href']
         link_list.append(link)
 
-    return link_list
+    return link_list, ticker_name_list
 
 
 def history_list(html):
@@ -38,14 +42,6 @@ def history_list(html):
 
 
 def history_scrapper(html):
-    # soup = BeautifulSoup
-    # time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
-    # price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
-    # open_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[0].get_text(strip=True)
-    # max_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[1].get_text(strip=True)
-    # min_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[2].get_text(strip=True)
-    # amount = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[3].get_text(
-    #     strip=True)
     try:
         time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
     except Exception:
@@ -72,3 +68,4 @@ def history_scrapper(html):
         amount = 'Не удалось извлечь значение!'
 
     return time_, price, open_, max_, min_, amount
+

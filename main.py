@@ -8,20 +8,25 @@ from window import update_table, create_gui
 
 
 def main():
-    # while True:
-    list_ticker = emulation_for_ticker()
+    while True:
+        try:
+            list_ticker = emulation_for_ticker()
+        except Exception:
+            print('Цикл начал новую итерацию из-за ошибки')
+            continue
 
-    # link_list = link_scrapper(list_ticker)
-    data_list = []
 
-    for ticker in list_ticker:
-        info_about_ticker = ticker_scrapper(ticker)
-        data_list.append(info_about_ticker)
-        # тут можно изменить название файла, при замене название также необходимо сменить в модуле window.py
-    save_result(data_list, 'биржевые данные.xlsx')
+        # link_list = link_scrapper(list_ticker)
+        data_list = []
 
-        # устанавливаем время ожидания между циклами
-    time.sleep(5)
+        for ticker in list_ticker:
+            info_about_ticker = ticker_scrapper(ticker)
+            data_list.append(info_about_ticker)
+            # тут можно изменить название файла, при замене название также необходимо сменить в модуле window.py
+        save_result(data_list, 'биржевые данные.xlsx')
+
+            # устанавливаем время ожидания между циклами
+        time.sleep(1)
 
 
 if __name__ == "__main__":
