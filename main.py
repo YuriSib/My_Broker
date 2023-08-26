@@ -1,6 +1,7 @@
 import time
 import threading
 
+from html_master import html_obj
 from emulator import emulation_for_ticker
 from scrapper import ticker_scrapper, link_scrapper
 from in_excel import save_result
@@ -10,13 +11,11 @@ from window import update_table, create_gui
 def main():
     while True:
         try:
-            list_ticker = emulation_for_ticker()
+            list_ticker = html_obj()
         except Exception:
             print('Цикл начал новую итерацию из-за ошибки')
             continue
 
-
-        # link_list = link_scrapper(list_ticker)
         data_list = []
 
         for ticker in list_ticker:
