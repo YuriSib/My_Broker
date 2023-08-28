@@ -1,11 +1,11 @@
 import os
 
-# from emulator import emulation_for_history, emulation_for_ticker
-from scrapper import history_scrapper, link_scrapper, history_list
+from scrapper import link_scrapper
 from in_excel import save_history_result
 from html_master import html_obj, history_html_obj
 
 
+# функция проверяет наличие файлов в папке исторические данные
 def check_have(name):
     check = bool
     folder_path = 'исторические данные'
@@ -16,6 +16,7 @@ def check_have(name):
         check = False
 
     return check
+
 
 
 def historical_tables():

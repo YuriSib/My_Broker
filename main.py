@@ -1,11 +1,8 @@
 import time
-import threading
 
 from html_master import html_obj
-from emulator import emulation_for_ticker
-from scrapper import ticker_scrapper, link_scrapper
+from scrapper import ticker_scrapper
 from in_excel import save_result
-from window import update_table, create_gui
 
 
 def main():
@@ -37,6 +34,5 @@ def main():
 
 
 if __name__ == "__main__":
-    for i in range(10):
         main()
 

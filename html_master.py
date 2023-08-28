@@ -31,7 +31,7 @@ def timing_decorator(func):
         return result
     return wrapper
 
-
+# функция заходит циклом на страницы со списком тикеров и возвращает список с html кодом тикеров
 @timing_decorator
 def html_obj():
         options = webdriver.ChromeOptions()
@@ -54,18 +54,12 @@ def html_obj():
                 )
         url_ = 'https://ru.investing.com/stock-screener/?sp=country::56%7Csector::a%7Cindustry::a%7CequityType::a%3Ceq_market_cap;'
         ticker_list = []
-        for count in range(1, 8):
+        for count in range(1, 2):
                 print(f'Гружу {count}-ю страницу...')
                 driver.get(url=f'{url_}{count}')
                 wait = WebDriverWait(driver, 10)
                 element = wait.until(EC.visibility_of_element_located((By.XPATH, '//td[@data-column-name="name_trans" and contains(@class, "symbol left bold elp")]/a')))
 
-                # html = driver.page_source
-                # soup_login = BeautifulSoup(html, 'lxml')
-                # privacy_window = soup_login.find('div', class_='ot-sdk-container')
-                # if privacy_window:
-                #         button = driver.find_element('id', 'onetrust-accept-btn-handler')
-                #         button.click()
                 html = driver.page_source
                 soup = BeautifulSoup(html, 'lxml')
                 table = soup.find('table', {'id': 'resultsTable'}).find('tbody').find_all('tr')
@@ -75,6 +69,7 @@ def html_obj():
         return ticker_list
 
 
+# берет на вход url тикера, возвращает список исторических данных
 def history_html_obj(url):
         options = webdriver.ChromeOptions()
         options.add_argument("start-maximized")
@@ -130,16 +125,9 @@ def history_html_obj(url):
         html = driver.page_source
         soup = BeautifulSoup(html, 'lxml')
 
-        # name = soup.find('h1', {'class': 'text-2xl font-semibold instrument-header_title__6W2Qr mobile:mb-2'}).get_text(
-        #         strip=True)
-        # name = ticker_name(name)
         history_data_list = soup.find_all('tr', {'data-test': 'historical-data-table-row'})
         history_data = []
         for html in history_data_list:
                 history_data.append(history_scrapper(html))
 
         return history_data
-
-#
-# url = 'https://ru.investing.com/equities/sberbank_rts-historical-data'
-# history_html_obj(url)

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 
 
+# берет на вход объект BS4, возвращает список с данными тикера
 def ticker_scrapper(soup):
     data_ticker_ = []
     name = soup.find('td', {'data-column-name': 'name_trans'}).get_text(strip=True)
@@ -21,6 +22,7 @@ def ticker_scrapper(soup):
     return data_ticker_
 
 
+# на вход получает список html тикеров, возвращает ссылки на эти тикеры
 def link_scrapper(ticker_list):
     link_list = []
     ticker_name_list = []
@@ -34,13 +36,7 @@ def link_scrapper(ticker_list):
     return link_list, ticker_name_list
 
 
-def history_list(html):
-    soup = BeautifulSoup(html, 'lxml')
-    history = soup.find_all('tr', {'data-test': 'historical-data-table-row'})
-
-    return history
-
-
+# превращает html код в исторические данные
 def history_scrapper(html):
     try:
         time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
