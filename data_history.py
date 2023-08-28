@@ -1,8 +1,9 @@
 import os
 
-from emulator import emulation_for_history, emulation_for_ticker
+# from emulator import emulation_for_history, emulation_for_ticker
 from scrapper import history_scrapper, link_scrapper, history_list
-from in_excel import save_result
+from in_excel import save_history_result
+from html_master import html_obj, history_html_obj
 
 
 def check_have(name):
@@ -18,7 +19,7 @@ def check_have(name):
 
 
 def historical_tables():
-    list_ticker = emulation_for_ticker()
+    list_ticker = html_obj()
 
     link_list, ticker_name_list = link_scrapper(list_ticker)
 
@@ -27,9 +28,11 @@ def historical_tables():
         idx = link_list.index(part_link)
         check = check_have(ticker_name_list[idx])
         if check is False:
-            link = f'https://ru.investing.com{part_link}'
-            history_data, name = emulation_for_history(link)
-            save_result(history_data, f'исторические данные/{name}.xlsx')
+            if 'cid=' in part_link:
+                part_link = part_link.split('?cid=')[0]
+            link = f'https://ru.investing.com{part_link}-historical-data'
+            history_data = history_html_obj(link)
+            save_history_result(history_data, f'исторические данные/{ticker_name_list[idx]}.xlsx')
         else:
             print(f'Документ {ticker_name_list[idx]}.xlsx уже есть в папке!')
         print(f'Осталось выгрузить {len(link_list) - count} элементов')
