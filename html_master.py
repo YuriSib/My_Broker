@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 
 from scrapper import history_scrapper
 
+
 def ticker_name(value):
     pattern = r'\((.*?)\)'
     match = re.search(pattern, value)
@@ -119,7 +120,10 @@ def history_html_obj(url):
         button.send_keys("\ue007")
 
         button = driver.find_element('xpath', '//button[@class="inv-button HistoryDatePicker_apply-button__Oj7Hu"]')
-        button.click()
+        try:
+                button.click()
+        except Exception:
+                driver.execute_script("arguments[0].click();", button)
 
         time.sleep(10)
 
