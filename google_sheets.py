@@ -1,62 +1,43 @@
-from __future__ import print_function
-import os.path
-import pickle
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+import os
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
-SAMPLE_RANGE_NAME = 'Test List!A2:E246'
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-
-class GoogleSheet:
-    SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID'
-    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    service = None
-
-    def __init__(self):
-        creds = None
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
-                creds = pickle.load(token)
-
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                print('flow')
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', self.SCOPES)
-                creds = flow.run_local_server(port=0)
-            with open('token.pickle', 'wb') as token:
-                pickle.dump(creds, token)
-
-        self.service = build('sheets', 'v4', credentials=creds)
-
-    def updateRangeValues(self, range, values):
-        data = [{
-            'range': range,
-            'values': values
-        }]
-        body = {
-            'valueInputOption': 'USER_ENTERED',
-            'data': data
-        }
-        result = self.service.spreadsheets().values().batchUpdate(spreadsheetId=self.SPREADSHEET_ID,
-                                                                  body=body).execute()
-        print('{0} cells updated.'.format(result.get('totalUpdatedCells')))
+SPREADSHEET_ID = "1Nk940U5dssNJXGMyDPs_QBPOuu9rCu7Vdyf-xpyOX-k"
 
 
 def main():
-    gs = GoogleSheet()
-    test_range = 'Test List!G2:H4'
-    test_values = [
-        [16, 26],
-        [36, 46],
-        [56, 66]
-    ]
-    gs.updateRangeValues(test_range, test_values)
+    credentials = None
+    if os.path.exists("token.json"):
+        credentials = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if not credentials or not credentials.valid:
+        if credentials and credentials.expired and credentials.refresh_token:
+            credentials.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            credentials = flow.run_local_server(port=0)
+        with open("token.json", "w") as token:
+            token.write(credentials.to_json())
+
+    try:
+        service = build("sheets", "v4", credentials=credentials)
+        sheets = service.spreadsheets()
+
+        result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="test list!A1:C6").execute()
+
+        values = result.get("values", [])
+
+        for row in values:
+            print(values)
+    except HttpError as error:
+        print(error)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
+
