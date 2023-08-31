@@ -3,6 +3,7 @@ import time
 from html_master import html_obj
 from scrapper import ticker_scrapper
 from in_excel import save_result
+from google_sheets import save_to_google_sheets
 
 
 def main():
@@ -28,7 +29,7 @@ def main():
             continue
             # тут можно изменить название файла
         save_result(data_list, 'биржевые данные.xlsx')
-
+        save_to_google_sheets(data_list)
             # устанавливаем время ожидания между циклами
         time.sleep(1)
 

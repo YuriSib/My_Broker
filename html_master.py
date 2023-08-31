@@ -31,6 +31,7 @@ def timing_decorator(func):
         return result
     return wrapper
 
+
 # функция заходит циклом на страницы со списком тикеров и возвращает список с html кодом тикеров
 @timing_decorator
 def html_obj():
@@ -54,7 +55,7 @@ def html_obj():
                 )
         url_ = 'https://ru.investing.com/stock-screener/?sp=country::56%7Csector::a%7Cindustry::a%7CequityType::a%3Ceq_market_cap;'
         ticker_list = []
-        for count in range(1, 2):
+        for count in range(1, 8):
                 print(f'Гружу {count}-ю страницу...')
                 driver.get(url=f'{url_}{count}')
                 wait = WebDriverWait(driver, 10)

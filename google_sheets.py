@@ -8,10 +8,11 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
+# сюда вставляем адрес нашей таблицы
 SPREADSHEET_ID = "1Nk940U5dssNJXGMyDPs_QBPOuu9rCu7Vdyf-xpyOX-k"
 
 
-def main():
+def save_to_google_sheets(values_to_write):
     credentials = None
     if os.path.exists("token.json"):
         credentials = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -27,17 +28,19 @@ def main():
     try:
         service = build("sheets", "v4", credentials=credentials)
         sheets = service.spreadsheets()
+        # задаем название колонок
+        column_name = ['Название компании', 'Тикер', 'Актуальная цена', 'Максимальная цена',
+                           'Минимальная цена', 'Объем торгов', 'Рыночная капитализация']
+        values_to_write.insert(0, column_name)
 
-        result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="test list!A1:C6").execute()
+        body = {"values": values_to_write}
+        result = sheets.values().update(
+                # range="test list!A1:H400" - выбираем название листа и устанавливаем диапазон яцеек для заиси
+            spreadsheetId=SPREADSHEET_ID, range="test list!A1:H400", valueInputOption="RAW", body=body
+        ).execute()
 
-        values = result.get("values", [])
+        print("Data updated successfully!")
 
-        for row in values:
-            print(values)
     except HttpError as error:
         print(error)
-
-
-if __name__ == "__main__":
-    main()
 
