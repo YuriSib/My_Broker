@@ -43,4 +43,3 @@ def save_to_google_sheets(values_to_write):
 
     except HttpError as error:
         print(error)
-

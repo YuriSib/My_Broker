@@ -18,7 +18,6 @@ def check_have(name):
     return check
 
 
-
 def historical_tables():
     list_ticker = html_obj()
 

@@ -55,7 +55,7 @@ def html_obj():
                 )
         url_ = 'https://ru.investing.com/stock-screener/?sp=country::56%7Csector::a%7Cindustry::a%7CequityType::a%3Ceq_market_cap;'
         ticker_list = []
-        for count in range(1, 8):
+        for count in range(1, 2):
                 print(f'Гружу {count}-ю страницу...')
                 driver.get(url=f'{url_}{count}')
                 wait = WebDriverWait(driver, 10)
@@ -99,8 +99,9 @@ def history_html_obj(url):
         if privacy_window:
                 button = driver.find_element('id', 'onetrust-accept-btn-handler')
                 button.click()
-        button = driver.find_element("xpath", "//div[contains(@class, 'DatePickerWrapper_input-text__HAN0Z') and "
-                                              "contains(@class, 'DatePickerWrapper_center__BYe4Q')]")
+        # button = driver.find_element("xpath", "//div[contains(@class, 'DatePickerWrapper_input-text__HAN0Z') and "
+        #                                       "contains(@class, 'DatePickerWrapper_center__BYe4Q')]")
+        button = driver.find_element("xpath", "//div[@class='flex flex-col justify-center flex-1 text-[#333] text-sm leading-5']")
         button.click()
 
         button = driver.find_element("xpath", "//input[@type='date']")
@@ -115,7 +116,8 @@ def history_html_obj(url):
                 button.send_keys("\ue013")
         button.send_keys("\ue007")
 
-        button = driver.find_element('xpath', '//button[@class="inv-button HistoryDatePicker_apply-button__Oj7Hu"]')
+        # button = driver.find_element('xpath', '//button[@class="inv-button HistoryDatePicker_apply-button__Oj7Hu"]')
+        button = driver.find_element('xpath', "//span[@class='text-[#fff] text-center text-sm font-bold leading-5']")
         try:
                 button.click()
         except Exception:
@@ -126,7 +128,9 @@ def history_html_obj(url):
         html = driver.page_source
         soup = BeautifulSoup(html, 'lxml')
 
-        history_data_list = soup.find_all('tr', {'data-test': 'historical-data-table-row'})
+        history_data_list = soup.find_all('tr', {'class': 'h-[41px] hover:bg-[#F5F5F5] relative after:absolute after:'
+                                                          'bottom-0 after:bg-[#ECEDEF] after:h-px after:left-0 after:'
+                                                          'right-0 historical-data-v2_price__atUfP'})
         history_data = []
         for html in history_data_list:
                 history_data.append(history_scrapper(html))

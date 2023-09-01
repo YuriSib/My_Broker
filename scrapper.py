@@ -39,7 +39,9 @@ def link_scrapper(ticker_list):
 # превращает html код в исторические данные
 def history_scrapper(html):
     try:
-        time_ = html.find('td', class_='datatable_cell__LJp3C font-bold').get_text(strip=True)
+        time_ = html.find('td', class_='datatable_cell__LJp3C text-left align-middle overflow-hidden text-v2-black'
+                                       ' text-ellipsis whitespace-nowrap text-sm font-semibold leading-4 min-w-[106px]'
+                                       ' left-0 sticky bg-white sm:bg-inherit').get_text(strip=True)
     except Exception:
         time_ = 'Не удалось извлечь значение!'
     try:
@@ -47,19 +49,23 @@ def history_scrapper(html):
     except Exception:
         price = 'Не удалось извлечь значение!'
     try:
-        open_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[0].get_text(strip=True)
+        open_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
+                                           'min-w-[77px]')[0].get_text(strip=True)
     except Exception:
         open_ = 'Не удалось извлечь значение!'
     try:
-        max_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[1].get_text(strip=True)
+        max_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
+                                           'min-w-[77px]')[1].get_text(strip=True)
     except Exception:
         max_ = 'Не удалось извлечь значение!'
     try:
-        min_ = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[2].get_text(strip=True)
+        min_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
+                                           'min-w-[77px]')[2].get_text(strip=True)
     except Exception:
         min_ = 'Не удалось извлечь значение!'
     try:
-        amount = html.find_all('td', class_='datatable_cell__LJp3C datatable_cell--align-end__qgxDQ')[3].get_text(strip=True)
+        amount = html.find('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
+                                        'min-w-[87px]').get_text(strip=True)
     except Exception:
         amount = 'Не удалось извлечь значение!'
 
