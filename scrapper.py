@@ -42,32 +42,21 @@ def history_scrapper(html):
         time_ = html.find('td', class_='datatable_cell__LJp3C text-left align-middle overflow-hidden text-v2-black'
                                        ' text-ellipsis whitespace-nowrap text-sm font-semibold leading-4 min-w-[106px]'
                                        ' left-0 sticky bg-white sm:bg-inherit').get_text(strip=True)
-    except Exception:
-        time_ = 'Не удалось извлечь значение!'
-    try:
         price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
-    except Exception:
-        price = 'Не удалось извлечь значение!'
-    try:
+        price = price.replace('.', '').replace(',', '.')
         open_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[0].get_text(strip=True)
-    except Exception:
-        open_ = 'Не удалось извлечь значение!'
-    try:
+        open_ = open_.replace('.', '').replace(',', '.')
         max_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[1].get_text(strip=True)
-    except Exception:
-        max_ = 'Не удалось извлечь значение!'
-    try:
+        max_ = max_.replace('.', '').replace(',', '.')
         min_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[2].get_text(strip=True)
-    except Exception:
-        min_ = 'Не удалось извлечь значение!'
-    try:
+        min_ = min_.replace('.', '').replace(',', '.')
         amount = html.find('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                         'min-w-[87px]').get_text(strip=True)
     except Exception:
-        amount = 'Не удалось извлечь значение!'
+        time_, price, open_, max_, min_, amount = 0, 0, 0, 0, 0, 0
 
     return time_, price, open_, max_, min_, amount
 
