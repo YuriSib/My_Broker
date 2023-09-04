@@ -55,7 +55,7 @@ def html_obj():
                 )
         url_ = 'https://ru.investing.com/stock-screener/?sp=country::56%7Csector::a%7Cindustry::a%7CequityType::a%3Ceq_market_cap;'
         ticker_list = []
-        for count in range(1, 2):
+        for count in range(1, 8):
                 print(f'Гружу {count}-ю страницу...')
                 driver.get(url=f'{url_}{count}')
                 wait = WebDriverWait(driver, 10)
@@ -75,7 +75,7 @@ def history_html_obj(url):
         options = webdriver.ChromeOptions()
         options.add_argument("start-maximized")
 
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
 
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         # Пробуем избежать вывода сообщений об уставершей версии в консоль
@@ -136,6 +136,3 @@ def history_html_obj(url):
                 history_data.append(history_scrapper(html))
 
         return history_data
-
-
-# history_html_obj('https://ru.investing.com/equities/oreilly-automotive-historical-data?cid=1180833')

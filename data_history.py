@@ -30,8 +30,11 @@ def historical_tables():
             check = check_have(ticker_name_list[idx])
             if check is False:
                 if 'cid=' in part_link:
-                    part_link = part_link.split('?cid=')[0]
-                link = f'https://ru.investing.com{part_link}-historical-data'
+                    parts = part_link.split('?')
+                    part_link = parts[0] + '-historical-data' + '?' + parts[1]
+                    link = f'https://ru.investing.com{part_link}'
+                else:
+                    link = f'https://ru.investing.com{part_link}-historical-data'
                 history_data = history_html_obj(link)
                 save_history_result(history_data, f'исторические данные/{ticker_name_list[idx]}.xlsx')
             else:
