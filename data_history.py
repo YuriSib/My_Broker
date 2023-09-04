@@ -25,18 +25,21 @@ def historical_tables():
 
     count = 0
     for part_link in link_list:
-        idx = link_list.index(part_link)
-        check = check_have(ticker_name_list[idx])
-        if check is False:
-            if 'cid=' in part_link:
-                part_link = part_link.split('?cid=')[0]
-            link = f'https://ru.investing.com{part_link}-historical-data'
-            history_data = history_html_obj(link)
-            save_history_result(history_data, f'исторические данные/{ticker_name_list[idx]}.xlsx')
-        else:
-            print(f'Документ {ticker_name_list[idx]}.xlsx уже есть в папке!')
-        print(f'Осталось выгрузить {len(link_list) - count} элементов')
-        count += 1
+        try:
+            idx = link_list.index(part_link)
+            check = check_have(ticker_name_list[idx])
+            if check is False:
+                if 'cid=' in part_link:
+                    part_link = part_link.split('?cid=')[0]
+                link = f'https://ru.investing.com{part_link}-historical-data'
+                history_data = history_html_obj(link)
+                save_history_result(history_data, f'исторические данные/{ticker_name_list[idx]}.xlsx')
+            else:
+                print(f'Документ {ticker_name_list[idx]}.xlsx уже есть в папке!')
+            print(f'Осталось выгрузить {len(link_list) - count} элементов')
+            count += 1
+        except Exception:
+            continue
 
 
 historical_tables()

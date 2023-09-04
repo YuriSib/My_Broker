@@ -75,7 +75,7 @@ def history_html_obj(url):
         options = webdriver.ChromeOptions()
         options.add_argument("start-maximized")
 
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
 
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         # Пробуем избежать вывода сообщений об уставершей версии в консоль
@@ -136,3 +136,6 @@ def history_html_obj(url):
                 history_data.append(history_scrapper(html))
 
         return history_data
+
+
+# history_html_obj('https://ru.investing.com/equities/oreilly-automotive-historical-data?cid=1180833')

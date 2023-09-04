@@ -43,16 +43,16 @@ def history_scrapper(html):
                                        ' text-ellipsis whitespace-nowrap text-sm font-semibold leading-4 min-w-[106px]'
                                        ' left-0 sticky bg-white sm:bg-inherit').get_text(strip=True)
         price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
-        price = price.replace('.', '').replace(',', '.')
+        price = price.replace('.', '').replace(',', '.').replace('.', ',')
         open_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[0].get_text(strip=True)
-        open_ = open_.replace('.', '').replace(',', '.')
+        open_ = open_.replace('.', '').replace(',', '.').replace('.', ',')
         max_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[1].get_text(strip=True)
-        max_ = max_.replace('.', '').replace(',', '.')
+        max_ = max_.replace('.', '').replace(',', '.').replace('.', ',')
         min_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                            'min-w-[77px]')[2].get_text(strip=True)
-        min_ = min_.replace('.', '').replace(',', '.')
+        min_ = min_.replace('.', '').replace(',', '.').replace('.', ',')
         amount = html.find('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
                                         'min-w-[87px]').get_text(strip=True)
     except Exception:
