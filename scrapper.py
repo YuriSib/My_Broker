@@ -44,18 +44,15 @@ def history_scrapper(html):
                                        ' left-0 sticky bg-white sm:bg-inherit').get_text(strip=True)
         price = html.find('td', {'dir': 'ltr'}).get_text(strip=True)
         price = price.replace('.', '').replace(',', '.').replace('.', ',')
-        open_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
-                                           'min-w-[77px]')[0].get_text(strip=True)
+        open_ = html.find_all('td', {'data-test': 'relative-most-active-last'})[0].get_text(strip=True)
         open_ = open_.replace('.', '').replace(',', '.').replace('.', ',')
-        max_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
-                                           'min-w-[77px]')[1].get_text(strip=True)
+        max_ = html.find_all('td', {'data-test': 'relative-most-active-last'})[1].get_text(strip=True)
         max_ = max_.replace('.', '').replace(',', '.').replace('.', ',')
-        min_ = html.find_all('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
-                                           'min-w-[77px]')[2].get_text(strip=True)
+        min_ = html.find_all('td', {'data-test': 'relative-most-active-last'})[2].get_text(strip=True)
         min_ = min_.replace('.', '').replace(',', '.').replace('.', ',')
-        amount = html.find('td', class_='text-v2-black text-right text-sm font-normal leading-5 align-middle '
-                                        'min-w-[87px]').get_text(strip=True)
+        amount = html.find('td', {'data-test': 'relative-most-active-vol'}).get_text(strip=True)
     except Exception:
+        print('При загрузке исторических данных возникла ошибка!')
         time_, price, open_, max_, min_, amount = 0, 0, 0, 0, 0, 0
 
     return time_, price, open_, max_, min_, amount
